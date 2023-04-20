@@ -1,18 +1,21 @@
 ---
-- set_fact:
-      ansible_distribution: "{{ ansible_facts['lsb']['id'] }}"
-      ansible_distribution_release: "{{ ansible_facts['lsb']['codename'] }}"
-      unattended_origins_patterns:
-        - 'origin=Ubuntu,archive=${distro_codename}-security'
-      unattended_package_blacklist:
-        - 'cuda'
-        - 'cuda-drivers'
-      unattended_remove_new_unused_dependencies: False
-      unattended_update_package_list: 7
-      unattended_download_upgradeable: 0
-      unattended_autoclean_interval: 7
-      unattended_clean_interval: 3
-      unattended_verbose: 2
+- name: Setting facts
+  ansible.builtin.set_fact:
+    ansible_distribution: "{{ ansible_facts['lsb']['id'] }}"
+    ansible_distribution_release: "{{ ansible_facts['lsb']['codename'] }}"
+    unattended_origins_patterns:
+      - 'origin=Ubuntu,archive=${distro_codename}-security'
+    unattended_package_blacklist:
+      - 'cuda'
+      - '*cuda*'
+      - 'cuda-drivers'
+      - '*nvidia*'
+    unattended_remove_new_unused_dependencies: false
+    unattended_update_package_list: 7
+    unattended_download_upgradeable: 0
+    unattended_autoclean_interval: 7
+    unattended_clean_interval: 3
+    unattended_verbose: 2
 
 - name: "Import tasks from the unattended-upgrades playbook"
   ansible.builtin.import_tasks: "unattended-upgrades.yml"
