@@ -36,7 +36,7 @@ APT::Periodic::RandomSleep "{{unattended_random_sleep}}";
 Unattended-Upgrade::Origins-Pattern {
 {% if unattended_origins_patterns is defined %}
   {% for origin in unattended_origins_patterns %}
-    "{{ origin }}";
+   "{{ origin }}";
   {% endfor %}
 {% else %}
   {% for origin in __unattended_origins_patterns %}
@@ -85,6 +85,14 @@ Unattended-Upgrade::Mail "{{unattended_mail}}";
 // Set this value to "true" to get emails only on errors. Default
 // is to always send a mail if Unattended-Upgrade::Mail is set
 Unattended-Upgrade::MailOnlyOnError "true";
+{% endif %}
+
+{% if unattended_mail_report %}
+// Set this value to one of:
+//    "always", "only-on-error" or "on-change"
+// If this is not set, then any legacy MailOnlyOnError (boolean) value
+// is used to chose between "only-on-error" and "on-change"
+Unattended-Upgrade::MailReport "{{ unattended_mail_report }}";
 {% endif %}
 
 {% if unattended_remove_unused_dependencies %}

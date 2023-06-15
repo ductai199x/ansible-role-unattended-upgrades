@@ -5,13 +5,13 @@
 [![Ansible Quality Score](https://img.shields.io/ansible/quality/59313)](https://galaxy.ansible.com/hifis/unattended_upgrades)
 [![Ansible Role Downloads](https://img.shields.io/ansible/role/d/59313)](https://galaxy.ansible.com/hifis/unattended_upgrades)
 
-Install and setup [unattended-upgrades](https://launchpad.net/unattended-upgrades) for Ubuntu and Debian (since Wheezy), to periodically install security upgrades.
+Install and setup [unattended-upgrades](https://launchpad.net/unattended-upgrades) for Ubuntu and Debian, to periodically install security upgrades.
 
 ### Notes
 
-1. If you have used version 0.0.1 of the role, you can delete the file `/etc/apt/apt.conf.d/10periodic` as it is not needed anymore. You can use the following one-shot command:
+1. If you have used version `0.0.1` of the role, you can delete the file `/etc/apt/apt.conf.d/10periodic` as it is not needed anymore. You can use the following one-shot command:
     * `ansible -m file -a "state=absent path=/etc/apt/apt.conf.d/10periodic" <host-pattern>`
-1. If you have used an older version of this role, the files `20auto-upgrades` and `50unattended-upgrades` will differ from the system defaults (instead of configuration being placed in a separate file, as we do now).  These can be left as-is as they will be overridden.  During OS upgrades, when asked if these files should be overwritten by the maintainer's package, say yes.  They will then be reset to their default states, and you won't be asked these questions again.
+1. If you have used this role before version `2.0.0`, the files `20auto-upgrades` and `50unattended-upgrades` will differ from the system defaults (instead of configuration being placed in a separate file, as we do now).  These can be left as-is as they will be overridden.  During OS upgrades, when asked if these files should be overwritten by the maintainer's package, say yes.  They will then be reset to their default states, and you won't be asked these questions again.
 
 ## Requirements
 
@@ -59,6 +59,9 @@ On some hosts you may find that the unattended-upgrade's cron file `/etc/cron.da
 * `unattended_mail_only_on_error`:
   * Default: `false`
   * Description: Send e-mail only on errors, otherwise e-mail will be sent every time there's a package upgrade.
+* `unattended_mail_report`:
+  * Default: `false`
+  * Description: Choose on what event to send an email. Possible values are "always", "only-on-error" or "on-change".
 * `unattended_remove_unused_dependencies`:
   * Default: `false`
   * Description: Do automatic removal of all unused dependencies after the upgrade.
@@ -184,19 +187,6 @@ unattended_origins_patterns:
   - 'o=Debian,codename=${distro_codename},a=proposed-updates'
 ```
 
-On debian wheezy, due to `unattended-upgrades` being `0.79.5`, you cannot use the `codename` directive.
-
-You will have to do archive based matching instead:
-
-```yaml
-unattended_origins_patterns:
-  - 'origin=Debian,a=stable,label=Debian-Security' # security updates
-  - 'o=Debian,a=stable,l=Debian' # updates including non-security updates
-  - 'o=Debian,a=proposed-updates'
-```
-
-Please be sure to read about the issues regarding this in the origin pattern documentation above.
-
 #### For Ubuntu
 
 In Ubuntu, archive always contains the distribution codename
@@ -220,8 +210,6 @@ unattended_origins_patterns:
   - 'origin=Raspbian,codename=${distro_codename},label=Raspbian'
 ```
 
-You can not use the `codename` directive on raspbian wheezy, the same as with debian wheezy above.
-
 To not install any updates on a raspbian host, just set `unattended_origins_patterns` to an empty list:
 ```
 unattended_origins_patterns: []
@@ -241,4 +229,7 @@ and was originally created by [Jan Vlnas](https://github.com/jnv).
 We would like to thank and give credits to the following contributors of this
 project:
 
-* Be the first to be named here!
+* [alpha0010](https://github.com/alpha0010)
+* [gcotelli](https://github.com/gcotelli)
+* [lukashass](https://github.com/lukashass)
+* [nono-lqdn](https://github.com/nono-lqdn)
